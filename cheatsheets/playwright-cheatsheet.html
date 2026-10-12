@@ -1,0 +1,574 @@
+<title>Playwright Field Sheet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a test-runner report — sticky section index, then stacked sections of "command → what it's for" entries in a 2-col grid that collapses to 1 */
+:root {
+  --bg: #f3f5f8;
+  --surface: #ffffff;
+  --ink: #18202c;
+  --muted: #5a6577;
+  --line: #d9dee7;
+  --accent: #2552c7;
+  --accent-soft: #e4ebfb;
+  --pass: #1d7a4a;
+  --pass-soft: #e1f2e8;
+  --warn: #a5560b;
+  --warn-soft: #fbeedc;
+  --code-bg: #eef1f6;
+  --display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "Cascadia Code", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #11151c; --surface: #181e27; --ink: #e4e8ef; --muted: #98a2b3; --line: #2a3240;
+    --accent: #7ea2ff; --accent-soft: #1d2a4a; --pass: #5fd394; --pass-soft: #163325;
+    --warn: #f0a85a; --warn-soft: #3a2a17; --code-bg: #0d1117; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #11151c; --surface: #181e27; --ink: #e4e8ef; --muted: #98a2b3; --line: #2a3240;
+  --accent: #7ea2ff; --accent-soft: #1d2a4a; --pass: #5fd394; --pass-soft: #163325;
+  --warn: #f0a85a; --warn-soft: #3a2a17; --code-bg: #0d1117; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 15px/1.55 var(--body); padding-inline: 16px; padding-block: 0 64px; }
+.wrap { max-width: 1120px; margin: 0 auto; }
+header.top { padding-block: 40px 20px; display: grid; gap: 10px; }
+.eyebrow { font: 600 12px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+h1 { font: 800 clamp(30px, 5vw, 46px)/1.05 var(--display); margin: 0; text-wrap: balance; letter-spacing: -.01em; }
+.lede { margin: 0; color: var(--muted); max-width: 68ch; }
+.legend { display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 13px; color: var(--muted); align-items: center; }
+.chip { display: inline-block; font: 600 11px/1 var(--mono); padding: 4px 7px; border-radius: 4px; letter-spacing: .03em; white-space: nowrap; }
+.chip.done { background: var(--pass-soft); color: var(--pass); }
+.chip.soon { background: var(--accent-soft); color: var(--accent); }
+.chip.trap { background: var(--warn-soft); color: var(--warn); }
+
+nav.index { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); border-bottom: 1px solid var(--line); padding-block: 10px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+nav.index .links { display: flex; gap: 4px; overflow-x: auto; flex: 1 1 420px; min-width: 0; scrollbar-width: thin; }
+nav.index a { font: 500 13px/1 var(--body); color: var(--muted); text-decoration: none; padding: 7px 9px; border-radius: 6px; white-space: nowrap; }
+nav.index a:hover, nav.index a:focus-visible { background: var(--surface); color: var(--ink); outline: none; }
+#q { flex: 0 1 240px; min-width: 0; width: 100%; font: 14px var(--body); padding: 8px 10px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); }
+#q:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+section { padding-block: 34px 6px; scroll-margin-top: 64px; }
+.sec-head { display: grid; gap: 6px; margin-bottom: 16px; }
+.sec-head .row { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+h2 { font: 600 24px/1.2 var(--display); margin: 0; }
+.why { margin: 0; color: var(--muted); max-width: 72ch; }
+.why b { color: var(--ink); font-weight: 600; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 480px), 1fr)); gap: 12px; }
+.entry { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; display: grid; gap: 8px; min-width: 0; align-content: start; }
+.entry p { margin: 0; font-size: 14px; color: var(--muted); }
+.entry p b { color: var(--ink); font-weight: 600; }
+.code { position: relative; min-width: 0; }
+pre { margin: 0; background: var(--code-bg); border-radius: 6px; padding: 10px 40px 10px 12px; overflow-x: auto; font: 13px/1.55 var(--mono); }
+code { font-family: var(--mono); font-size: .92em; }
+p code, td code, li code { background: var(--code-bg); padding: 1px 5px; border-radius: 4px; }
+.c { color: var(--muted); }
+.copy { position: absolute; top: 6px; right: 6px; font: 600 11px var(--mono); border: 1px solid var(--line); background: var(--surface); color: var(--muted); border-radius: 4px; padding: 3px 6px; cursor: pointer; }
+.copy:hover, .copy:focus-visible { color: var(--accent); border-color: var(--accent); outline: none; }
+
+.truths { display: grid; gap: 8px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); }
+.truth { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; display: grid; gap: 4px; }
+.truth .id { font: 600 12px var(--mono); color: var(--accent); }
+.truth .t { font-weight: 600; }
+.truth .d { font-size: 14px; color: var(--muted); }
+
+.tablebox { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; min-width: 640px; }
+th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font: 600 12px var(--mono); text-transform: uppercase; letter-spacing: .05em; color: var(--muted); background: var(--bg); }
+tr:last-child td { border-bottom: 0; }
+
+.entry.trap { border-left: 3px solid var(--warn); }
+.empty { display: none; color: var(--muted); padding: 24px 0; }
+footer { margin-top: 40px; color: var(--muted); font-size: 13px; border-top: 1px solid var(--line); padding-top: 16px; }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+</style>
+
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">Playwright Test · TypeScript · v1.6x</div>
+  <h1>Playwright Field Sheet</h1>
+  <p class="lede">The commands you'll reach for most, grouped by the idea that explains them. Every section opens with the reason it exists, so you can rebuild a command you've forgotten from the idea behind it.</p>
+  <div class="legend">
+    <span><span class="chip done">SESSION 1</span> covered and quizzed</span>
+    <span><span class="chip soon">COMING UP</span> preview, taught in a later session</span>
+    <span><span class="chip trap">TRAP</span> a WDIO habit that breaks here</span>
+  </div>
+</header>
+
+<nav class="index" aria-label="Sections">
+  <div class="links">
+    <a href="#model">Mental model</a>
+    <a href="#cli">CLI</a>
+    <a href="#structure">Test structure</a>
+    <a href="#locators">Locators</a>
+    <a href="#actions">Actions</a>
+    <a href="#assertions">Assertions</a>
+    <a href="#contexts">Contexts</a>
+    <a href="#fixtures">Fixtures</a>
+    <a href="#config">Config</a>
+    <a href="#debug">Debugging</a>
+    <a href="#network">Network &amp; API</a>
+    <a href="#wdio">WDIO → PW</a>
+    <a href="#traps">Traps</a>
+  </div>
+  <label for="q" class="visually-hidden" style="position:absolute;left:-9999px">Filter the sheet</label>
+  <input id="q" type="search" placeholder="Filter, e.g. route, toHaveText" autocomplete="off">
+</nav>
+
+<p class="empty" id="empty">Nothing matches that filter.</p>
+
+<!-- ============ MODEL ============ -->
+<section id="model">
+  <div class="sec-head">
+    <div class="row"><h2>The mental model</h2><span class="chip done">SESSION 1</span></div>
+    <p class="why">Five facts that most of this sheet follows from. When a command surprises you, check which of these it comes from.</p>
+  </div>
+  <div class="truths">
+    <div class="truth entry"><span class="id">T1 · architecture</span><span class="t">Automation is commands sent to a browser over a protocol.</span><span class="d">Playwright keeps one <b>persistent two-way connection</b> open, while classic WebDriver sends one HTTP request per command. Because the browser can send messages first, Playwright gets events, <code>page.route()</code> interception and fast auto-waiting.</span></div>
+    <div class="truth entry"><span class="id">T2 · the race</span><span class="t">The page changes on its own schedule, not yours.</span><span class="d">So locators are <b>recipes</b> resolved again on each use, actions <b>auto-wait</b>, and assertions <b>retry</b>.</span></div>
+    <div class="truth entry"><span class="id">T3 · isolation</span><span class="t">A test is trustworthy only if it depends on nothing but the app.</span><span class="d">So every test gets a <b>fresh BrowserContext</b> (an incognito-like profile). The browser process is shared.</span></div>
+    <div class="truth entry"><span class="id">T4 · types</span><span class="t">TypeScript types are erased at runtime.</span><span class="d">Types catch mistakes while you write code. They never check real data, such as an API response, while the test runs.</span></div>
+    <div class="truth entry"><span class="id">Hierarchy</span><span class="t">Browser → BrowserContext → Page</span><span class="d">One browser per worker → one context per test → one or more pages (tabs) per context.</span></div>
+  </div>
+</section>
+
+<!-- ============ CLI ============ -->
+<section id="cli">
+  <div class="sec-head">
+    <div class="row"><h2>CLI: the commands you'll type daily</h2><span class="chip done">SESSION 1</span></div>
+    <p class="why">The equivalent of the git cheat sheet. <b>Everything goes through <code>npx playwright</code></b>. The test runner is part of the package, so there's no separate CLI to install.</p>
+  </div>
+  <div class="grid">
+    <div class="entry"><div class="code"><pre>npm init playwright@latest</pre></div><p><b>Start a new project.</b> Creates the config, an example test, and optionally a GitHub Actions workflow. It also installs the browsers.</p></div>
+    <div class="entry"><div class="code"><pre>npx playwright install --with-deps chromium</pre></div><p><b>Install browsers</b> and their OS dependencies. Leave out <code>chromium</code> to install all three. Used on fresh machines and in CI.</p></div>
+    <div class="entry"><div class="code"><pre>npx playwright test</pre></div><p><b>Run everything</b>, headless and in parallel, using <code>playwright.config.ts</code>.</p></div>
+    <div class="entry"><div class="code"><pre>npx playwright test tests/login.spec.ts:12</pre></div><p><b>Run one file</b>, or just the test on line 12.</p></div>
+    <div class="entry"><div class="code"><pre>npx playwright test -g "checkout"
+npx playwright test --grep @smoke</pre></div><p><b>Filter by title or tag.</b> <code>--grep-invert</code> excludes matches instead.</p></div>
+    <div class="entry"><div class="code"><pre>npx playwright test --project=chromium</pre></div><p><b>Run one project</b> (a browser, device, or environment defined in the config).</p></div>
+    <div class="entry"><div class="code"><pre>npx playwright test --ui</pre></div><p><b>UI mode.</b> Watch mode, a time-travel DOM view, and picking tests to run. Your main tool while writing tests.</p></div>
+    <div class="entry"><div class="code"><pre>npx playwright test --headed --workers=1</pre></div><p><b>Watch it run</b> in a visible browser, one test at a time.</p></div>
+    <div class="entry"><div class="code"><pre>npx playwright test --debug</pre></div><p><b>Step through</b> with the Playwright Inspector, which pauses before every action.</p></div>
+    <div class="entry"><div class="code"><pre>npx playwright test --last-failed</pre></div><p><b>Re-run only the tests that failed</b> last time.</p></div>
+    <div class="entry"><div class="code"><pre>npx playwright test --repeat-each=10</pre></div><p><b>Hunt for flakiness.</b> Runs each test 10 times. A test that fails only sometimes is flaky.</p></div>
+    <div class="entry"><div class="code"><pre>npx playwright test --list</pre></div><p><b>List the tests</b> that would run, without running them. Handy for checking grep and project filters.</p></div>
+    <div class="entry"><div class="code"><pre>npx playwright show-report</pre></div><p><b>Open the HTML report</b> from the last run.</p></div>
+    <div class="entry"><div class="code"><pre>npx playwright show-trace trace.zip</pre></div><p><b>Open a trace</b>, for example one downloaded from CI. It shows every action with DOM snapshots, network, and console.</p></div>
+    <div class="entry"><div class="code"><pre>npx playwright codegen localhost:3200</pre></div><p><b>Record actions</b> into code. Use it to find good locators, not to write whole tests.</p></div>
+    <div class="entry"><div class="code"><pre>npx playwright test --update-snapshots</pre></div><p><b>Re-record visual baselines</b> after an intended UI change. <span class="chip soon">COMING UP</span></p></div>
+    <div class="entry"><div class="code"><pre>npx playwright test --shard=1/4</pre></div><p><b>Run a quarter of the suite.</b> Used to split work across CI machines. <span class="chip soon">COMING UP</span></p></div>
+    <div class="entry"><div class="code"><pre>npx playwright test --only-changed=main</pre></div><p><b>Run only the tests affected by your git changes</b> since <code>main</code>. Gives a fast first signal in CI. <span class="chip soon">COMING UP</span></p></div>
+  </div>
+</section>
+
+<!-- ============ STRUCTURE ============ -->
+<section id="structure">
+  <div class="sec-head">
+    <div class="row"><h2>Test structure</h2><span class="chip done">SESSION 1</span></div>
+    <p class="why">Close to Mocha/Jasmine, which you know from WDIO. The difference: <b>setup is requested by name in <code>{ page, ... }</code></b> (fixtures) and not set up through shared variables.</p>
+  </div>
+  <div class="grid">
+    <div class="entry"><div class="code"><pre>import { test, expect } from '@playwright/test';
+
+test('user can log in', async ({ page }) => {
+  await page.goto('/login');
+  // ...
+});</pre></div><p><b>The basic test.</b> <code>{ page }</code> is a fixture: a fresh page in a fresh context, created for this test only.</p></div>
+    <div class="entry"><div class="code"><pre>test.describe('checkout', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/shop');
+  });
+  test('adds item', async ({ page }) => { /*...*/ });
+});</pre></div><p><b>Grouping and hooks.</b> Fine for simple navigation. For reusable setup, prefer fixtures.</p></div>
+    <div class="entry"><div class="code"><pre>await test.step('fill shipping address', async () => {
+  // several actions
+});</pre></div><p><b>Named steps</b> show up as collapsible blocks in reports and traces. They make long tests readable.</p></div>
+    <div class="entry"><div class="code"><pre>for (const path of ['/stages', '/dashboard', '/labs']) {
+  test(`${path} redirects anonymous users to login`, async ({ page }) => {
+    await page.goto(path);
+    await expect(page).toHaveURL('/login');
+  });
+}</pre></div><p><b>Data-driven tests.</b> Put the loop <i>outside</i> <code>test()</code> so each case is its own test, with its own result, run in parallel. Titles must be unique.</p></div>
+    <div class="entry"><div class="code"><pre><span class="c">// test.step = phases of ONE behaviour
+// test()    = ONE behaviour; a failure stops it</span></pre></div><p><b>Step or test?</b> If a failure in one part shouldn't hide the result of another, they're separate behaviours, so make them separate tests.</p></div>
+    <div class="entry"><div class="code"><pre>test('pays', { tag: ['@smoke', '@checkout'] }, async ({ page }) => {});</pre></div><p><b>Tags</b>, which you select with <code>--grep @smoke</code>.</p></div>
+    <div class="entry"><div class="code"><pre>test.skip(isMobile, 'no hover on mobile');
+test.fixme('known bug #123');
+test.slow();   <span class="c">// triples the timeout</span></pre></div><p><b>Annotations.</b> Skip with a reason, mark a known-broken test, or allow more time.</p></div>
+    <div class="entry"><div class="code"><pre>test.use({ viewport: { width: 390, height: 844 } });</pre></div><p><b>Override options</b> for one file or <code>describe</code> block, such as viewport, locale or <code>storageState</code>.</p></div>
+  </div>
+</section>
+
+<!-- ============ LOCATORS ============ -->
+<section id="locators">
+  <div class="sec-head">
+    <div class="row"><h2>Locators</h2><span class="chip done">SESSION 1</span></div>
+    <p class="why">From T2: a locator is a <b>recipe, resolved again on every action or assertion</b>. Creating one needs no <code>await</code>. It's <b>strict</b>: a single-target operation on several matches throws. Prefer what the user sees: role, then label or text, then test id, then CSS as a last resort.</p>
+  </div>
+  <div class="grid">
+    <div class="entry"><div class="code"><pre>page.getByRole('button', { name: 'Save' })
+page.getByRole('heading', { name: 'Dashboard', level: 1 })
+page.getByRole('link', { name: 'Docs', exact: true })</pre></div><p><b>First choice.</b> Matches the accessibility role and accessible name, the way a user or screen reader sees the page.</p></div>
+    <div class="entry"><div class="code"><pre>page.getByLabel('Email')
+page.getByPlaceholder('you@example.com')</pre></div><p><b>Form fields</b>, found by their label or placeholder.</p></div>
+    <div class="entry"><div class="code"><pre>page.getByText('Order placed')
+page.getByText(/total: \$\d+/i)</pre></div><p><b>Non-interactive text.</b> Matches substrings by default. Pass <code>exact: true</code> or a regex to be precise.</p></div>
+    <div class="entry"><div class="code"><pre>page.getByTestId('cart-count')</pre></div><p><b>A stable contract</b> with developers, using <code>data-testid</code> by default. Change the attribute with <code>testIdAttribute</code> in the config.</p></div>
+    <div class="entry"><div class="code"><pre>page.locator('#legacy .price')
+page.locator('xpath=//td[3]')</pre></div><p><b>CSS or XPath, as a last resort.</b> These break when markup changes, even if the user sees the same page.</p></div>
+    <div class="entry"><div class="code"><pre>page.getByRole('row', { name: 'Order 42' })
+    .getByRole('button', { name: 'Delete' })</pre></div><p><b>Chaining narrows the scope.</b> This is the standard fix for a strict mode violation.</p></div>
+    <div class="entry"><div class="code"><pre>page.getByRole('listitem')
+    .filter({ hasText: 'Laptop' })
+    .filter({ has: page.getByRole('button', { name: 'Buy' }) })</pre></div><p><b>Filter</b> by text or by a child element. <code>hasNot</code> and <code>hasNotText</code> exclude instead.</p></div>
+    <div class="entry"><div class="code"><pre>items.first()   items.last()   items.nth(2)
+await items.count()
+for (const item of await items.all()) { /*...*/ }</pre></div><p><b>When you mean one of many, say so explicitly.</b> <code>count()</code> and <code>all()</code> work on the whole set, so strictness doesn't apply.</p></div>
+    <div class="entry"><div class="code"><pre>saveBtn.or(confirmDialog)
+page.getByRole('button').and(page.getByTitle('Close'))</pre></div><p><b>Combine recipes.</b> <code>or</code> matches either one (e.g. "whichever appears first"). <code>and</code> requires both.</p></div>
+    <div class="entry"><div class="code"><pre>page.frameLocator('#payment').getByLabel('Card number')</pre></div><p><b>Inside an iframe.</b> No <code>switchToFrame</code>: you scope the locator to the frame instead.</p></div>
+  </div>
+</section>
+
+<!-- ============ ACTIONS ============ -->
+<section id="actions">
+  <div class="sec-head">
+    <div class="row"><h2>Actions</h2><span class="chip done">SESSION 1</span></div>
+    <p class="why">From T2: every action <b>auto-waits</b> until the checks it needs pass (Visible, Stable, Receives Events, Enabled, Editable), and fails only if they're <b>still failing when the timeout runs out</b>. Always <code>await</code> actions.</p>
+  </div>
+  <div class="grid">
+    <div class="entry"><div class="code"><pre>await page.goto('/login');</pre></div><p><b>Navigate.</b> Relative paths resolve against <code>baseURL</code> from the config.</p></div>
+    <div class="entry"><div class="code"><pre>await btn.click();
+await btn.dblclick();
+await btn.click({ button: 'right' });</pre></div><p><b>Click.</b> Waits for Visible, Stable, Receives Events and Enabled.</p></div>
+    <div class="entry"><div class="code"><pre>await page.getByLabel('Email').fill('qa@test.dev');
+await input.clear();</pre></div><p><b>Set a field's value in one go</b>, like WDIO <code>setValue</code>. Waits for Visible, Enabled and Editable.</p></div>
+    <div class="entry"><div class="code"><pre>await input.pressSequentially('laptop', { delay: 50 });</pre></div><p><b>Type key by key</b>, for inputs that react to each keystroke (autocomplete). <code>type()</code> is deprecated.</p></div>
+    <div class="entry"><div class="code"><pre>await input.press('Enter');
+await page.keyboard.press('Control+A');</pre></div><p><b>Keys and shortcuts.</b></p></div>
+    <div class="entry"><div class="code"><pre>await checkbox.check();
+await checkbox.setChecked(false);
+await select.selectOption({ label: 'Blue' });</pre></div><p><b>Checkboxes, radios and selects.</b> They ensure the final state, so <code>check()</code> on an already-checked box does nothing.</p></div>
+    <div class="entry"><div class="code"><pre>await page.getByLabel('Upload').setInputFiles('fixtures/cv.pdf');</pre></div><p><b>File upload.</b> Sets the file directly, with no OS dialog.</p></div>
+    <div class="entry"><div class="code"><pre>await card.hover();
+await item.dragTo(page.getByTestId('bin'));</pre></div><p><b>Hover and drag.</b></p></div>
+    <div class="entry"><div class="code"><pre>page.once('dialog', d => d.accept());
+await deleteBtn.click();</pre></div><p><b>Native <code>alert</code> and <code>confirm</code> dialogs.</b> Register the handler <i>before</i> the click that opens the dialog.</p></div>
+    <div class="entry"><div class="code"><pre>await spinner.waitFor({ state: 'hidden' });</pre></div><p><b>Explicit wait for a state.</b> Rarely needed, because actions and assertions already wait.</p></div>
+    <div class="entry"><div class="code"><pre>const total = await page.evaluate(() => window.cart.total);</pre></div><p><b>Run JavaScript in the page</b>, like WDIO <code>browser.execute</code>.</p></div>
+    <div class="entry"><div class="code"><pre>await page.screenshot({ path: 'shot.png', fullPage: true });</pre></div><p><b>Manual screenshot.</b> Usually you'd let the config capture them on failure.</p></div>
+  </div>
+</section>
+
+<!-- ============ ASSERTIONS ============ -->
+<section id="assertions">
+  <div class="sec-head">
+    <div class="row"><h2>Web-first assertions</h2><span class="chip done">SESSION 1</span></div>
+    <p class="why">The rule: <b>a locator inside <code>expect()</code> plus <code>await</code> in front means it retries</b> (default 5 s). A value inside <code>expect()</code> is a snapshot and is checked once.</p>
+  </div>
+  <div class="grid">
+    <div class="entry"><div class="code"><pre>await expect(toast).toBeVisible();
+await expect(spinner).toBeHidden();</pre></div><p><b>Presence.</b> <code>toBeAttached()</code> checks the element is in the DOM, whether or not it's visible.</p></div>
+    <div class="entry"><div class="code"><pre>await expect(status).toHaveText('Paid');
+await expect(status).toContainText('Pai');
+await expect(rows).toHaveText(['A', 'B', 'C']);</pre></div><p><b>Text.</b> <code>toHaveText</code> matches the whole text (or a regex). An array checks every match, in order.</p></div>
+    <div class="entry"><div class="code"><pre>await expect(rows).toHaveCount(3);</pre></div><p><b>Count.</b> The retrying replacement for <code>expect(await rows.count())</code>.</p></div>
+    <div class="entry"><div class="code"><pre>await expect(input).toHaveValue('qa@test.dev');
+await expect(box).toBeChecked();
+await expect(btn).toBeEnabled();   <span class="c">// / toBeDisabled()</span>
+await expect(input).toBeFocused();</pre></div><p><b>Form state.</b></p></div>
+    <div class="entry"><div class="code"><pre>await expect(link).toHaveAttribute('href', /\/orders\/\d+/);
+await expect(tab).toHaveClass(/active/);</pre></div><p><b>Attributes and classes.</b></p></div>
+    <div class="entry"><div class="code"><pre>await expect(page).toHaveURL(/\/dashboard/);
+await expect(page).toHaveTitle('QA Learning App');</pre></div><p><b>Page-level checks.</b> Note it's <code>expect(page)</code>, not a locator.</p></div>
+    <div class="entry"><div class="code"><pre>await expect(res).toBeOK();   <span class="c">// API response: 2xx</span></pre></div><p><b>API responses</b> from the <code>request</code> fixture. <span class="chip soon">COMING UP</span></p></div>
+    <div class="entry"><div class="code"><pre>await expect.soft(price).toHaveText('$10');
+await expect.soft(tax).toHaveText('$2');</pre></div><p><b>Soft assertions.</b> Failures are recorded but the test keeps going, so you see every mismatch in one run.</p></div>
+    <div class="entry"><div class="code"><pre>await expect.poll(async () => {
+  const r = await request.get('/api/orders/42');
+  return (await r.json()).status;
+}, { timeout: 10_000 }).toBe('PAID');</pre></div><p><b>Retry anything that isn't a locator</b>, such as an API value or a database row. <span class="chip soon">COMING UP</span></p></div>
+    <div class="entry"><div class="code"><pre>await expect(async () => {
+  await page.reload();
+  await expect(badge).toHaveText('3');
+}).toPass({ timeout: 15_000 });</pre></div><p><b>Retry a whole block</b> until every check in it passes. <span class="chip soon">COMING UP</span></p></div>
+    <div class="entry"><div class="code"><pre>await expect(page).toHaveScreenshot();
+await expect(nav).toMatchAriaSnapshot(`
+  - link "Dashboard"
+  - link "Labs"`);</pre></div><p><b>Visual and accessibility-tree snapshots.</b> <span class="chip soon">COMING UP</span></p></div>
+  </div>
+</section>
+
+<!-- ============ CONTEXTS ============ -->
+<section id="contexts">
+  <div class="sec-head">
+    <div class="row"><h2>Browsers, contexts, pages</h2><span class="chip done">SESSION 1</span></div>
+    <p class="why">From T3: <b>each test gets a fresh context</b> with its own cookies and storage, at almost no cost. You can also open more contexts yourself for multi-user scenarios.</p>
+  </div>
+  <div class="grid">
+    <div class="entry"><div class="code"><pre>test('admin approves, customer sees it', async ({ page, browser }) => {
+  const adminCtx = await browser.newContext({ storageState: 'auth/admin.json' });
+  const admin = await adminCtx.newPage();
+  // page = customer, admin = admin, fully isolated
+  await adminCtx.close();
+});</pre></div><p><b>Two users in one test.</b> Two isolated contexts inside one browser process.</p></div>
+    <div class="entry"><div class="code"><pre>const popupPromise = page.waitForEvent('popup');
+await page.getByText('Open invoice').click();
+const popup = await popupPromise;</pre></div><p><b>New tab or popup.</b> Start waiting <i>before</i> the click that opens it. <code>context.waitForEvent('page')</code> catches any new page.</p></div>
+    <div class="entry"><div class="code"><pre>await context.storageState({ path: 'auth/user.json' });
+test.use({ storageState: 'auth/user.json' });</pre></div><p><b>Save and reuse a login</b>, so you log in once rather than in every test. <span class="chip soon">COMING UP</span></p></div>
+    <div class="entry"><div class="code"><pre>await context.addCookies([{ name: 'consent', value: 'no', url: 'http://localhost:3200' }]);
+await context.grantPermissions(['geolocation']);</pre></div><p><b>Shape the context's state</b> before the test acts.</p></div>
+  </div>
+</section>
+
+<!-- ============ FIXTURES ============ -->
+<section id="fixtures">
+  <div class="sec-head">
+    <div class="row"><h2>Fixtures</h2><span class="chip done">SESSION 1</span></div>
+    <p class="why">Setup, <b><code>await use(value)</code></b> and teardown in one function. A fixture runs <b>only when a test asks for it by name</b>, can depend on other fixtures, and is typed. This is how the industry standard <b>POM via fixtures</b> works.</p>
+  </div>
+  <div class="grid">
+    <div class="entry"><div class="code"><pre>// fixtures.ts
+import { test as base } from '@playwright/test';
+import { LoginPage } from './pages/LoginPage';
+
+export const test = base.extend&lt;{ loginPage: LoginPage }&gt;({
+  loginPage: async ({ page }, use) =&gt; {
+    const lp = new LoginPage(page);   <span class="c">// setup</span>
+    await use(lp);                    <span class="c">// test runs here</span>
+                                      <span class="c">// teardown after use()</span>
+  },
+});
+export { expect } from '@playwright/test';</pre></div><p><b>A custom test-scoped fixture.</b> Tests import <code>test</code> from <i>your</i> fixtures file, not from <code>@playwright/test</code>.</p></div>
+    <div class="entry"><div class="code"><pre>import { test, expect } from './fixtures';
+
+test('rejects bad password', async ({ loginPage }) =&gt; {
+  await loginPage.login('qa@test.dev', 'wrong');
+  await expect(loginPage.error).toBeVisible();
+});</pre></div><p><b>Using it.</b> Ask for it by name and it's created for you. Tests that don't ask for it never pay its cost.</p></div>
+    <div class="entry"><div class="code"><pre>export const test = base.extend&lt;{}, { apiToken: string }&gt;({
+  apiToken: [async ({}, use) =&gt; {
+    await use(await fetchToken());
+  }, { scope: 'worker' }],
+});</pre></div><p><b>Worker-scoped</b>: set up once per worker process, for expensive things. Note the <i>second</i> type parameter. <span class="chip soon">COMING UP</span></p></div>
+    <div class="entry"><div class="code"><pre>failOnConsoleErrors: [async ({ page }, use) =&gt; {
+  const errors: string[] = [];
+  page.on('console', m =&gt; m.type() === 'error' &amp;&amp; errors.push(m.text()));
+  await use();
+  expect(errors).toEqual([]);
+}, { auto: true }],</pre></div><p><b>Auto fixtures</b> run for every test without being requested. Good for cross-cutting checks. <span class="chip soon">COMING UP</span></p></div>
+    <div class="entry"><div class="code"><pre>import { mergeTests } from '@playwright/test';
+export const test = mergeTests(pagesTest, apiTest);</pre></div><p><b>Combine fixture files</b> as the framework grows. <span class="chip soon">COMING UP</span></p></div>
+  </div>
+</section>
+
+<!-- ============ CONFIG ============ -->
+<section id="config">
+  <div class="sec-head">
+    <div class="row"><h2>playwright.config.ts</h2><span class="chip soon">COMING UP</span></div>
+    <p class="why">This replaces <code>wdio.conf.js</code>. It holds runner settings at the top level, browser and context options in <b><code>use</code></b>, and variants in <b><code>projects</code></b>.</p>
+  </div>
+  <div class="grid">
+    <div class="entry" style="grid-column: 1 / -1"><div class="code"><pre>import { defineConfig, devices } from '@playwright/test';
+
+export default defineConfig({
+  testDir: './tests',
+  fullyParallel: true,                       <span class="c">// parallelise tests inside files too</span>
+  forbidOnly: !!process.env.CI,              <span class="c">// fail CI if a test.only slipped in</span>
+  retries: process.env.CI ? 2 : 0,           <span class="c">// pass-on-retry ⇒ reported as "flaky"</span>
+  workers: process.env.CI ? 1 : undefined,
+  reporter: [['html'], ['list']],
+  timeout: 30_000,                           <span class="c">// per test</span>
+  expect: { timeout: 5_000 },                <span class="c">// per web-first assertion</span>
+  use: {
+    baseURL: process.env.BASE_URL ?? 'http://localhost:3200',
+    trace: 'on-first-retry',
+    screenshot: 'only-on-failure',
+    video: 'retain-on-failure',
+  },
+  projects: [
+    { name: 'setup', testMatch: /.*\.setup\.ts/ },
+    { name: 'chromium', use: { ...devices['Desktop Chrome'], storageState: 'auth/user.json' }, dependencies: ['setup'] },
+    { name: 'mobile',   use: { ...devices['Pixel 7'] } },
+  ],
+  webServer: {
+    command: 'pnpm dev',
+    url: 'http://localhost:3200',
+    reuseExistingServer: !process.env.CI,
+  },
+});</pre></div><p><b>A realistic starting config.</b> A <code>setup</code> project logs in once and saves <code>storageState</code>, and the other projects depend on it. <code>webServer</code> starts the app before the tests run.</p></div>
+  </div>
+</section>
+
+<!-- ============ DEBUG ============ -->
+<section id="debug">
+  <div class="sec-head">
+    <div class="row"><h2>Debugging</h2><span class="chip done">SESSION 1</span></div>
+    <p class="why">Thanks to the persistent connection (T1), Playwright can record <b>everything</b>: actions, DOM snapshots, network and console. Read the trace before you reach for <code>console.log</code>.</p>
+  </div>
+  <div class="grid">
+    <div class="entry"><div class="code"><pre>await page.pause();</pre></div><p><b>Breakpoint.</b> Opens the Inspector at this line when running headed or with <code>--debug</code>.</p></div>
+    <div class="entry"><div class="code"><pre>npx playwright test --ui</pre></div><p><b>UI mode.</b> Re-runs on save and lets you scrub through each step's DOM.</p></div>
+    <div class="entry"><div class="code"><pre>use: { trace: 'on-first-retry' }</pre></div><p><b>The trace in CI.</b> Recorded only when a test is retried, so it's cheap when everything passes and detailed when something fails.</p></div>
+    <div class="entry"><div class="code"><pre>page.on('console', m =&gt; console.log('[browser]', m.text()));
+page.on('requestfailed', r =&gt; console.log('FAILED', r.url()));</pre></div><p><b>Listen to browser events.</b> Only possible because the browser can send messages first (T1).</p></div>
+  </div>
+</section>
+
+<!-- ============ NETWORK ============ -->
+<section id="network">
+  <div class="sec-head">
+    <div class="row"><h2>Network &amp; API</h2><span class="chip soon">COMING UP</span></div>
+    <p class="why">From T1: the browser can <b>pause a request and ask the test what to do</b>. That lets you fake backends, test error states, and set up data through the API instead of the UI.</p>
+  </div>
+  <div class="grid">
+    <div class="entry"><div class="code"><pre>await page.route('**/api/orders', route =&gt;
+  route.fulfill({ json: [{ id: 42, status: 'PAID' }] }));</pre></div><p><b>Mock a response.</b> Register the route <i>before</i> the page makes the request.</p></div>
+    <div class="entry"><div class="code"><pre>await page.route('**/api/orders', route =&gt;
+  route.fulfill({ status: 500 }));</pre></div><p><b>Force an error state</b>, which is hard to trigger against a real backend.</p></div>
+    <div class="entry"><div class="code"><pre>await page.route('**/*.{png,jpg}', r =&gt; r.abort());
+await page.route('**/api/**', async route =&gt; {
+  const res = await route.fetch();
+  const json = await res.json();
+  await route.fulfill({ response: res, json: { ...json, beta: true } });
+});</pre></div><p><b>Block or modify real responses.</b></p></div>
+    <div class="entry"><div class="code"><pre>const resP = page.waitForResponse(r =&gt;
+  r.url().includes('/api/orders') &amp;&amp; r.status() === 201);
+await page.getByRole('button', { name: 'Place order' }).click();
+const res = await resP;</pre></div><p><b>Wait for a specific response.</b> Start waiting <i>before</i> the click, or a fast response can arrive before you're listening.</p></div>
+    <div class="entry"><div class="code"><pre>test('create order via API', async ({ request }) =&gt; {
+  const res = await request.post('/api/orders', { data: { sku: 'LAPTOP' } });
+  await expect(res).toBeOK();
+  const body = await res.json();
+});</pre></div><p><b>API testing, and API-based setup</b> for UI tests. Shares <code>baseURL</code> with the config.</p></div>
+  </div>
+</section>
+
+<!-- ============ WDIO ============ -->
+<section id="wdio">
+  <div class="sec-head">
+    <div class="row"><h2>WebdriverIO → Playwright</h2><span class="chip done">SESSION 1</span></div>
+    <p class="why">To translate what you already know. The right-hand column says what changes, not just what the new name is.</p>
+  </div>
+  <div class="tablebox">
+    <table>
+      <thead><tr><th>WebdriverIO</th><th>Playwright</th><th>What changes</th></tr></thead>
+      <tbody>
+        <tr><td><code>await $('sel')</code></td><td><code>page.locator('sel')</code> / <code>getByRole…</code></td><td>Lazy recipe, no <code>await</code>, strict</td></tr>
+        <tr><td><code>await $$('sel')</code></td><td><code>locator.all()</code> / <code>count()</code> / <code>nth()</code></td><td>One locator stands for the whole set</td></tr>
+        <tr><td><code>browser.url('/x')</code></td><td><code>page.goto('/x')</code></td><td>Uses <code>baseURL</code></td></tr>
+        <tr><td><code>el.setValue('x')</code> / <code>addValue</code></td><td><code>fill('x')</code> / <code>pressSequentially('x')</code></td><td>Auto-waits for Editable</td></tr>
+        <tr><td><code>el.waitForDisplayed()</code> / <code>waitForClickable()</code></td><td><i>(built in)</i></td><td>Every action waits for actionability</td></tr>
+        <tr><td><code>browser.pause(2000)</code></td><td><i>don't</i></td><td><code>page.waitForTimeout</code> exists but is a smell</td></tr>
+        <tr><td><code>el.getText()</code></td><td><code>innerText()</code> / <code>textContent()</code></td><td>For asserting, use <code>toHaveText</code></td></tr>
+        <tr><td><code>expect(el).toBeDisplayed()</code></td><td><code>await expect(loc).toBeVisible()</code></td><td>Both retry. In PW, pass the locator</td></tr>
+        <tr><td><code>browser.execute(fn)</code></td><td><code>page.evaluate(fn)</code></td><td></td></tr>
+        <tr><td><code>browser.keys('Enter')</code></td><td><code>page.keyboard.press('Enter')</code></td><td></td></tr>
+        <tr><td><code>browser.switchToFrame()</code></td><td><code>page.frameLocator('#f')</code></td><td>Scope the locator, no context switching</td></tr>
+        <tr><td><code>browser.switchWindow()</code></td><td><code>waitForEvent('popup')</code> → its own <code>page</code></td><td>Each tab is its own object</td></tr>
+        <tr><td><code>browser.mock()</code></td><td><code>page.route()</code></td><td>Works in all three browsers</td></tr>
+        <tr><td><code>browser.reloadSession()</code></td><td><i>automatic</i></td><td>Fresh context for every test</td></tr>
+        <tr><td><code>before</code> / <code>beforeEach</code> + shared <code>let</code></td><td>fixtures (<code>test.extend</code>)</td><td>On demand, typed, teardown included</td></tr>
+        <tr><td><code>wdio.conf.js</code> capabilities / suites</td><td><code>playwright.config.ts</code> projects / tags</td><td></td></tr>
+        <tr><td>services (e.g. a dev server)</td><td><code>webServer</code> / fixtures</td><td></td></tr>
+        <tr><td><code>saveScreenshot()</code></td><td><code>page.screenshot()</code></td><td>Or automatic on failure via config</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============ TRAPS ============ -->
+<section id="traps">
+  <div class="sec-head">
+    <div class="row"><h2>Traps</h2><span class="chip trap">TRAP</span></div>
+    <p class="why">The first two caught you in Session 1, and the test-data and <code>.entries()</code> ones came up in your first hands-on suite. All of them come from habits that worked fine somewhere else.</p>
+  </div>
+  <div class="grid">
+    <div class="entry trap"><div class="code"><pre><span class="c">// ✗ throws if 2 "Delete" buttons exist</span>
+await page.getByRole('button', { name: 'Delete' }).click();
+<span class="c">// ✓ scope it, or say "first" on purpose</span>
+await row.getByRole('button', { name: 'Delete' }).click();</pre></div><p><b>"First match wins" doesn't exist here.</b> Ask yourself: does this operation only make sense for exactly one element?</p></div>
+    <div class="entry trap"><div class="code"><pre><span class="c">// ✗ snapshot: never retries, despite the outer await</span>
+await expect(await status.textContent()).toBe('Paid');
+<span class="c">// ✓ locator inside expect</span>
+await expect(status).toHaveText('Paid');</pre></div><p><b>What decides whether it retries is what's inside <code>expect()</code>,</b> not the <code>await</code> in front of it.</p></div>
+    <div class="entry trap"><div class="code"><pre><span class="c">// ✗ floating promise: may never be checked</span>
+expect(status).toHaveText('Paid');</pre></div><p><b>A missing <code>await</code></b> is the most common Playwright bug. Turn on the lint rules <code>@typescript-eslint/no-floating-promises</code> and <code>playwright/missing-playwright-await</code>.</p></div>
+    <div class="entry trap"><div class="code"><pre><span class="c">// ✗ races the response</span>
+await btn.click();
+await page.waitForResponse('**/api/orders');
+<span class="c">// ✓ listen first, then act</span>
+const p = page.waitForResponse('**/api/orders');
+await btn.click(); await p;</pre></div><p><b>Start listening for an event before you trigger it.</b> The same applies to popups, dialogs and downloads.</p></div>
+    <div class="entry trap"><div class="code"><pre>let orderId: string;   <span class="c">// ✗ set in test A, read in test B</span></pre></div><p><b>Sharing state between tests</b> breaks T3, and it breaks for real under <code>fullyParallel</code>. Create the data a test needs inside that test or its fixtures.</p></div>
+    <div class="entry trap"><div class="code"><pre>const order = (await res.json()) as Order;  <span class="c">// ✗ not a check</span></pre></div><p><b>A type annotation doesn't validate anything</b> (T4). To check an API's shape at runtime, validate it, for example with a schema library. <span class="chip soon">COMING UP</span></p></div>
+    <div class="entry trap"><div class="code"><pre><span class="c">// ✗ ~50% chance of a repeat after ~118 runs (birthday problem)</span>
+const email = `user${Math.floor(Math.random() * 10000)}@test.com`;
+<span class="c">// ✓ effectively unique</span>
+const email = `qa-${crypto.randomUUID().slice(0, 8)}@test.com`;</pre></div><p><b>"Probably unique" test data</b> fails at random once the database fills up. Make uniqueness guaranteed.</p></div>
+    <div class="entry trap"><div class="code"><pre><span class="c">// ✗ destructures each STRING: index='/', value='s'</span>
+for (const [index, value] of paths.values())
+<span class="c">// ✓ entries() yields [index, value] pairs</span>
+for (const [index, value] of paths.entries())</pre></div><p><b><code>.values()</code> vs <code>.entries()</code>.</b> Both type-check, because types catch mistakes in shape, not in meaning. Hover over the variable to see what it really is.</p></div>
+    <div class="entry trap"><div class="code"><pre>await page.waitForTimeout(3000);   <span class="c">// ✗</span></pre></div><p><b>Fixed sleeps</b> make tests both slow and flaky. Wait for a condition instead, with a web-first assertion or <code>waitForResponse</code>.</p></div>
+  </div>
+</section>
+
+<footer>Built for the QA Learning App practice track. The app runs locally on <code>localhost:3200</code>. Sections marked COMING UP are previews and get covered properly in later sessions.</footer>
+</div>
+
+<script>
+(() => {
+  // copy buttons on every code block
+  document.querySelectorAll('.code').forEach(box => {
+    const btn = document.createElement('button');
+    btn.className = 'copy'; btn.type = 'button'; btn.textContent = 'copy';
+    btn.setAttribute('aria-label', 'Copy code');
+    btn.addEventListener('click', () => {
+      const text = box.querySelector('pre').innerText;
+      const done = () => { btn.textContent = 'copied'; setTimeout(() => btn.textContent = 'copy', 1200); };
+      try {
+        navigator.clipboard.writeText(text).then(done, () => selectText(box));
+      } catch (e) { selectText(box); }
+    });
+    box.appendChild(btn);
+  });
+  function selectText(box) {
+    const r = document.createRange(); r.selectNodeContents(box.querySelector('pre'));
+    const s = getSelection(); s.removeAllRanges(); s.addRange(r);
+  }
+
+  // filter
+  const q = document.getElementById('q');
+  const empty = document.getElementById('empty');
+  try { const saved = localStorage.getItem('pw-sheet-q'); if (saved) q.value = saved; } catch (e) {}
+  function apply() {
+    const term = q.value.trim().toLowerCase();
+    let any = false;
+    document.querySelectorAll('section').forEach(sec => {
+      const items = sec.querySelectorAll('.entry, tbody tr');
+      let shown = 0;
+      items.forEach(el => {
+        const hit = !term || el.textContent.toLowerCase().includes(term);
+        el.hidden = !hit; if (hit) shown++;
+      });
+      const headHit = term && sec.querySelector('.sec-head').textContent.toLowerCase().includes(term);
+      if (headHit) { items.forEach(el => el.hidden = false); shown = items.length; }
+      sec.hidden = shown === 0;
+      if (shown) any = true;
+    });
+    empty.style.display = any ? 'none' : 'block';
+    try { localStorage.setItem('pw-sheet-q', q.value); } catch (e) {}
+  }
+  q.addEventListener('input', apply);
+  apply();
+})();
+</script>

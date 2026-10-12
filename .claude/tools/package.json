@@ -1,0 +1,10 @@
+{
+  "name": "learning-visual-tools",
+  "private": true,
+  "type": "module",
+  "description": "Renders Mermaid / SVG sources to PNG for the mermaid-maker and svg-maker subagents.",
+  "dependencies": {
+    "@mermaid-js/mermaid-cli": "^11.4.0",
+    "@resvg/resvg-js": "^2.6.2"
+  }
+}

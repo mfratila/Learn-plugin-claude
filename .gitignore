@@ -1,0 +1,6 @@
+.claude/tools/node_modules/
+.claude/tools/work/
+.claude/tools/.puppeteer.json
+.claude/state/
+.claude/settings.local.json
+.obsidian/workspace*.json
