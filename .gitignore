@@ -4,3 +4,7 @@
 .claude/state/
 .claude/settings.local.json
 .obsidian/workspace*.json
+notes/
+.notes/**
+cheatsheets/
+.cheatsheets/**

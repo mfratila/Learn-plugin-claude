@@ -40,3 +40,36 @@ Yes, that plan works. Your setup is already built to be portable. Here's what mo
 To keep both machines in sync, `git pull` before a session and commit and push after it. If you study on both machines without pulling first, the files in `notes/` will conflict.
 
 Do you want me to do the PC side now: copy the memory file into the repo, run `git init`, make the first commit, and create the private GitHub repo with `gh`? I'll check with you before pushing.
+
+---
+
+### You
+
+can I add .notes/** to the .gitignore so that my notes stay only on this computer? I just want to share this setup with a friend so he can start using it to learn as well, not my private notes
+
+---
+
+### Claude
+
+Yes. I've added it to [.gitignore](.gitignore). One fix to the pattern: your folder is `notes`, without a dot, so the line is:
+
+```
+notes/
+```
+
+That keeps the whole folder on this computer, including the session transcripts and the diagrams in `notes/viz/`. Your friend won't miss it: the logging hook and the diagram renderer both create those folders if they're missing, so their own notes will start filling in on the first session.
+
+Before you share, a few other things to check:
+
+- **`cheatsheets/`** has your `playwright-cheatsheet.html`. It's not private like the notes, but it's your own material. Add `cheatsheets/` to `.gitignore` too if you don't want to share it.
+- **Your memory** (the Playwright learning-path note) lives outside this folder, so it won't be shared.
+- **`README.md`** uses your path (`D:\Dev Stuff\Learning`) in the setup steps. That's harmless; your friend just uses their own folder.
+- **Git has no history yet.** This folder isn't a repo, so nothing private has been committed. If you ever commit `notes/` by mistake, adding it to `.gitignore` afterwards doesn't remove it from history.
+
+Your friend needs Node.js, Chrome, Obsidian and Claude Code. After cloning, they run this once:
+
+```bash
+cd .claude/tools && npm install
+```
+
+Do you want me to set up the repo now (`git init` and a first commit)? I'd show you the list of files going in, so you can confirm nothing private is included before anything goes to GitHub.
